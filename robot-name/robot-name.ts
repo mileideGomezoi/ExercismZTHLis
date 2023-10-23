@@ -1,39 +1,46 @@
 export class Robot {
-  constructor() {}
+  private Rname: string;
+  public static noAllowedNames: Set<string>;
+
+  constructor() {
+    Robot.noAllowedNames = new Set<string>();
+    this.Rname = this.generateRandomName();
+  }
 
   private generateRandomName(): string {
-    const alphabetChars: string = "ABCDEFGHIJKLMNOPQRSTUVXZ";
-    let randomName: string = "";
-    let twoUpperCaseLetters: string;
-    let threeDigits: string;
-
-    // pick two random chars from alphabetChars var;
-    const randomNum1 = Math.floor(Math.random() * alphabetChars.length);
-    const randomNum2 = Math.floor(Math.random() * alphabetChars.length);
-    const char1 = alphabetChars.charAt(randomNum1).toUpperCase;
-    const char2 = alphabetChars.charAt(randomNum2).toUpperCase;
-    twoUpperCaseLetters = `${char1}${char2}`;
-
-    //generate three random numbers
-    const num1 = Math.floor(Math.random() * 9);
-    const num2 = Math.floor(Math.random() * 9);
-    const num3 = Math.floor(Math.random() * 9);
-    threeDigits = `${num1}${num2}${num3}`;
-
-    randomName = `${twoUpperCaseLetters}${threeDigits}`;
-
+    let randomName = "";
+    for (let i = 0; i < 2; i++) {
+      randomName += "ABCDEFGHIJKLMNOPQRSTUVWXYZ"[
+        Math.floor(Math.random() * 26)
+      ];
+    }
+    for (let i = 0; i < 3; i++) {
+      randomName += "0123456789"[Math.floor(Math.random() * 10)];
+    }
     return randomName;
   }
 
+  public generateName(): string {
+    let generatedName: string;
+
+    do {
+      generatedName = this.generateRandomName();
+    } while (Robot.noAllowedNames.has(generatedName));
+
+    Robot.noAllowedNames.add(generatedName);
+
+    return generatedName;
+  }
+
   public get name(): string {
-    return this.name;
+    return this.Rname;
   }
 
   public resetName(): void {
-    throw new Error("Implement Robot#resetName");
+    this.Rname = this.generateName();
   }
 
   public static releaseNames(): void {
-    throw new Error("Implement Robot.releaseNames");
+    return Robot.noAllowedNames.clear();
   }
 }
